@@ -1,0 +1,29 @@
+{
+    "name": "scaling-spork",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "b": "tsc",
+        "s": "./node_modules/.bin/ts-node ./src/index.ts",
+        "si": "node --inspect ./node_modules/.bin/ts-node ./src/index.ts",
+        "sib": "node --inspect-brk ./node_modules/.bin/ts-node ./src/index.ts",
+        "t": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/raymonddavis/scaling-spork.git"
+    },
+    "author": "Raymond Davis",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/raymonddavis/scaling-spork/issues"
+    },
+    "homepage": "https://github.com/raymonddavis/scaling-spork#readme",
+    "dependencies": {
+        "reflect-metadata": "^0.1.13",
+        "rxjs": "^6.6.3",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.1.5"
+    }
+}
