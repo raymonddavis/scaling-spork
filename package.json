@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "c": "rm -rf ./dist",
-        "b": "tsc && npm run copy-package",
+        "b": "tsc && npm run copy-package && npm run copy-readme",
         "copy-package": "cp -rf package.json dist",
         "copy-readme": "cp -rf README.md dist",
         "s": "./node_modules/.bin/ts-node ./src/examples/index.ts",
@@ -14,7 +14,8 @@
         "t": "node ./node_modules/.bin/jest",
         "ti": "node --inspect ./node_modules/.bin/jest",
         "tib": "node --inspect-brk ./node_modules/.bin/jest",
-        "p": "cd dist && npm publish"
+        "p": "cd dist && npm publish",
+        "cbp": "npm run c && npm run b && npm run p"
     },
     "repository": {
         "type": "git",
