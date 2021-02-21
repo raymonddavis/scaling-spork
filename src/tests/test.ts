@@ -1,7 +1,5 @@
 /* eslint-disable max-classes-per-file, no-console */
-import MissingSporkError from './MissingSporkError';
-import { Spork } from './Spork';
-import SporkHandler from './SporkHandler';
+import { Spork, SporkHandler, MissingSporkError } from '..';
 
 let handler: SporkHandler = null;
 

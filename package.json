@@ -1,27 +1,42 @@
 {
     "name": "scaling-spork",
     "version": "1.0.0",
-    "description": "",
+    "description": "Typed Event Handler",
     "main": "index.js",
     "scripts": {
-        "b": "tsc",
-        "s": "./node_modules/.bin/ts-node ./src/index.ts",
-        "si": "node --inspect ./node_modules/.bin/ts-node ./src/index.ts",
-        "sib": "node --inspect-brk ./node_modules/.bin/ts-node ./src/index.ts",
+        "c": "rm -rf ./dist",
+        "b": "tsc && npm run copy-package",
+        "copy-package": "cp -rf package.json dist",
+        "s": "./node_modules/.bin/ts-node ./src/examples/index.ts",
+        "si": "node --inspect ./node_modules/.bin/ts-node ./src/examples/index.ts",
+        "sib": "node --inspect-brk ./node_modules/.bin/ts-node ./src/examples/index.ts",
         "t": "node ./node_modules/.bin/jest",
         "ti": "node --inspect ./node_modules/.bin/jest",
-        "tib": "node --inspect-brk ./node_modules/.bin/jest"
+        "tib": "node --inspect-brk ./node_modules/.bin/jest",
+        "prepublishOnly": "echo \"Error: Don't run 'npm publish' in root. Use 'npm run d' instead.\" && exit 1",
+        "d": "cd dist && npm publish --ignore-scripts"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/raymonddavis/scaling-spork.git"
     },
-    "author": "Raymond Davis",
+    "author": {
+        "name": "Raymond Davis",
+        "email": "raymond.davis.4th@gmail.com",
+        "url": "https://github.com/raymonddavis"
+    },
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/raymonddavis/scaling-spork/issues"
     },
     "homepage": "https://github.com/raymonddavis/scaling-spork#readme",
+    "keywords": [
+        "event",
+        "stream"
+    ],
+    "engines": {
+        "node": ">=10"
+    },
     "dependencies": {
         "reflect-metadata": "^0.1.13",
         "rxjs": "^6.6.3",
