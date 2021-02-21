@@ -7,14 +7,14 @@
         "c": "rm -rf ./dist",
         "b": "tsc && npm run copy-package",
         "copy-package": "cp -rf package.json dist",
+        "copy-readme": "cp -rf README.md dist",
         "s": "./node_modules/.bin/ts-node ./src/examples/index.ts",
         "si": "node --inspect ./node_modules/.bin/ts-node ./src/examples/index.ts",
         "sib": "node --inspect-brk ./node_modules/.bin/ts-node ./src/examples/index.ts",
         "t": "node ./node_modules/.bin/jest",
         "ti": "node --inspect ./node_modules/.bin/jest",
         "tib": "node --inspect-brk ./node_modules/.bin/jest",
-        "prepublishOnly": "echo \"Error: Don't run 'npm publish' in root. Use 'npm run d' instead.\" && exit 1",
-        "d": "cd dist && npm publish --ignore-scripts"
+        "p": "cd dist && npm publish"
     },
     "repository": {
         "type": "git",
