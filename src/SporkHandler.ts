@@ -10,7 +10,9 @@ export default class SporkHandler {
     public dispatch<T extends object>(...events: T[]): void {
         const badClassNames: string[] = [];
 
-        events.forEach((event) => {
+        const flattenedEvents = events.flat();
+
+        flattenedEvents.forEach((event) => {
             const metadata = Reflect.getMetadata(
                 SPORK_METADATA,
                 event.constructor,
@@ -23,7 +25,10 @@ export default class SporkHandler {
                 const foundClassName = event.constructor.name;
                 let className = foundClassName;
 
-                if (foundClassName === undefined) {
+                if (
+                    foundClassName === undefined ||
+                    foundClassName === 'Object'
+                ) {
                     className = defaultName;
                 }
                 badClassNames.push(className);

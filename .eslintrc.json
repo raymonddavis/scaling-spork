@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": ["airbnb-base", "plugin:import/typescript"],
     "parser": "@typescript-eslint/parser",
@@ -22,7 +23,8 @@
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars-experimental": "error",
         "no-unused-vars": "off",
-        "operator-linebreak": "off"
+        "operator-linebreak": "off",
+        "no-plusplus": "off"
     },
     "settings": {
         "import/resolver": {
