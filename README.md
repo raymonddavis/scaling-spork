@@ -26,6 +26,8 @@ class ExampleEvent2 {
     }
 }
 
+@Spork({ emitLast: true })
+class ExampleEvent3 {}
 
 const sporkHandler = new SporkHandler();
 
@@ -34,11 +36,17 @@ sporkHandler.on(ExampleEvent1).subscribe((res) => {
 });
 
 sporkHandler.on(ExampleEvent2).subscribe((res) => {
-    console.log(res.data); // test
+    console.log(res.data); // { test: 1 }
 });
 
 sporkHandler.dispatch(new ExampleEvent1());
 sporkHandler.dispatch(new ExampleEvent2({ test: 1 }));
+
+sporkHandler.dispatch(new ExampleEvent3());
+
+sporkHandler.on(ExampleEvent3, { emitLast: true }).subscribe((res) => {
+    console.log(res);
+});
 ```
 
 Simply add `@Spork()` on a class you want to use with the handler.

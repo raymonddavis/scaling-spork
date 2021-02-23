@@ -15,7 +15,12 @@ class ExampleEvent2 {
 
 // class ExampleEvent3 {}
 
+@Spork({ emitLast: true })
+class ExampleEvent4 {}
+
 const sporkHandler = new SporkHandler();
+
+sporkHandler.dispatch(new ExampleEvent4());
 
 sporkHandler.on(ExampleEvent1).subscribe((res) => {
     console.log('1', res);
@@ -32,3 +37,7 @@ sporkHandler.on(ExampleEvent2).subscribe((res) => {
 sporkHandler.dispatch(new ExampleEvent1());
 sporkHandler.dispatch(new ExampleEvent2({ test: 1 }));
 // sporkHandler.dispatch(new ExampleEvent3());
+
+sporkHandler.on(ExampleEvent4, { emitLast: true }).subscribe((res) => {
+    console.log(res);
+});

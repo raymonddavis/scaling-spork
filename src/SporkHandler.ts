@@ -1,11 +1,16 @@
 import { Observable, Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { SPORK_METADATA } from './Spork';
+import { filter, startWith } from 'rxjs/operators';
+import { SPORK_METADATA, SPORK_OPTIONS } from './Spork';
 import MissingSporkError from './MissingSporkError';
 import { ISpork } from './ISpork';
+import { ISporkOptions } from './ISporkOptions';
 
 export default class SporkHandler {
     private $events = new Subject<any>();
+
+    private lastEmits: { [event: string]: any } = {};
+
+    private defaultOptions: ISporkOptions = { emitLast: false };
 
     public dispatch<T extends object>(...events: T[]): void {
         const badClassNames: string[] = [];
@@ -20,6 +25,15 @@ export default class SporkHandler {
 
             if (metadata) {
                 this.$events.next(event);
+
+                const options: ISporkOptions = Reflect.getMetadata(
+                    SPORK_OPTIONS,
+                    event.constructor,
+                );
+
+                if (options && options.emitLast) {
+                    this.lastEmits[event.constructor.name] = event;
+                }
             } else {
                 const defaultName = 'A class must be used.';
                 const foundClassName = event.constructor.name;
@@ -40,7 +54,10 @@ export default class SporkHandler {
         }
     }
 
-    public on<T extends object>(eventType: ISpork<T>): Observable<T> {
+    public on<T extends object>(
+        eventType: ISpork<T>,
+        options: ISporkOptions = this.defaultOptions,
+    ): Observable<T> {
         const eventTypeMetadata = Reflect.getMetadata(
             SPORK_METADATA,
             eventType,
@@ -61,7 +78,7 @@ export default class SporkHandler {
             throw new MissingSporkError([className]);
         }
 
-        return this.$events.pipe(
+        let obs$ = this.$events.pipe(
             filter((e) => {
                 const metadata = Reflect.getMetadata(
                     SPORK_METADATA,
@@ -70,5 +87,13 @@ export default class SporkHandler {
                 return metadata === eventTypeMetadata;
             }),
         );
+
+        const className = (eventType as any).name;
+
+        if (options.emitLast && this.lastEmits.hasOwnProperty(className)) {
+            obs$ = obs$.pipe(startWith(this.lastEmits[className]));
+        }
+
+        return obs$;
     }
 }

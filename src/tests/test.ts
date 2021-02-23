@@ -143,3 +143,17 @@ test('Should receive events', (done) => {
 
     handler.dispatch(events);
 });
+
+test('Should receive event (last emitted)', (done) => {
+    @Spork({ emitLast: true })
+    class ExampleEvent {}
+
+    const expectedReturn = new ExampleEvent();
+
+    handler.dispatch(expectedReturn);
+
+    handler.on(ExampleEvent, { emitLast: true }).subscribe((res) => {
+        expect(res).toBe(expectedReturn);
+        done();
+    });
+});

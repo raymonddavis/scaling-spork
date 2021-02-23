@@ -24,7 +24,8 @@
         "@typescript-eslint/no-unused-vars-experimental": "error",
         "no-unused-vars": "off",
         "operator-linebreak": "off",
-        "no-plusplus": "off"
+        "no-plusplus": "off";
+        "no-prototype-builtins":"off"
     },
     "settings": {
         "import/resolver": {
