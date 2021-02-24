@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file, no-console */
-import { Spork, SporkHandler, MissingSporkError } from '..';
+import { Spork, SporkHandler } from '..';
+import { ISporkOptions } from '../ISporkOptions';
 
 let handler: SporkHandler = null;
 
@@ -8,7 +9,6 @@ beforeEach(() => {
 });
 
 test('Should receive event (without data)', (done) => {
-    @Spork()
     class ExampleEvent {}
 
     const expectedReturn = new ExampleEvent();
@@ -22,7 +22,6 @@ test('Should receive event (without data)', (done) => {
 });
 
 test('Should receive event (with data)', (done) => {
-    @Spork()
     class ExampleEvent {
         public data: any = null;
     }
@@ -40,51 +39,11 @@ test('Should receive event (with data)', (done) => {
     handler.dispatch(expectedReturn);
 });
 
-test('Should throw error .on (class not sporked)', (done) => {
-    class ExampleEvent {}
-
-    const res = expect(() => {
-        handler.on(ExampleEvent);
-    });
-
-    res.toThrow(MissingSporkError);
-    res.toThrow('ExampleEvent');
-
-    done();
-});
-
-test('Should throw error .dispatch (class not sporked)', (done) => {
-    class ExampleEvent {}
-
-    const res = expect(() => {
-        handler.dispatch(new ExampleEvent());
-    });
-
-    res.toThrow(MissingSporkError);
-    res.toThrow('ExampleEvent');
-
-    done();
-});
-
-test('Should throw error .dispatch (not a class)', (done) => {
-    const res = expect(() => {
-        handler.dispatch({});
-    });
-
-    res.toThrow(MissingSporkError);
-    res.toThrow('A class must be used.');
-
-    done();
-});
-
 test('Should receive event (N events to N handlers)', (done) => {
-    @Spork()
     class ExampleEvent {}
 
-    @Spork()
     class ExampleEvent1 {}
 
-    @Spork()
     class ExampleEvent2 {}
 
     const expectedReturn = new ExampleEvent();
@@ -112,7 +71,6 @@ test('Should receive event (N events to N handlers)', (done) => {
 });
 
 test('Should receive events', (done) => {
-    @Spork()
     class ExampleEvent {
         public i: number = null;
 
@@ -145,8 +103,11 @@ test('Should receive events', (done) => {
 });
 
 test('Should receive event (last emitted)', (done) => {
-    @Spork({ emitLast: true })
-    class ExampleEvent {}
+    class ExampleEvent extends Spork {
+        sporkOptions: ISporkOptions = {
+            emitLast: true,
+        };
+    }
 
     const expectedReturn = new ExampleEvent();
 

@@ -1,3 +1,7 @@
 export interface ISporkOptions {
-    emitLast: boolean;
+    emitLast?: boolean;
 }
+
+export const DefaultSporkOptions: ISporkOptions = {
+    emitLast: false,
+};
