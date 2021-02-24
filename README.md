@@ -14,60 +14,40 @@ $ npm i scaling-spork
 ```js
 import { Spork, SporkHandler } from 'scaling-spork';
 
-// Only need to extend if using options
-class ExampleEvent1 extends Spork {
-    sporkOptions = {
-        emitLast: true,
-    };
-    message: string;
-    constructor(message: string) {
-        super(); // Only needed if using a constructor
-        this.message = message;
+@Spork()
+class ExampleEvent1 {}
+
+@Spork()
+class ExampleEvent2 {
+    public data: any = null;
+
+    constructor(data: any) {
+        this.data = data;
     }
 }
 
-class ExampleEvent2 {
-    data = {
-        test: 1,
-    };
-}
-
-class ExampleEvent3 {
-    id?: number;
-}
+@Spork({ emitLast: true })
+class ExampleEvent3 {}
 
 const sporkHandler = new SporkHandler();
 
-sporkHandler.dispatch(new ExampleEvent1('Before .on'));
-sporkHandler.on(ExampleEvent1, { emitLast: true }).subscribe((res) => {
-    console.log('1', res);
+sporkHandler.on(ExampleEvent1).subscribe((res) => {
+    console.log(res); // {}
 });
 
 sporkHandler.on(ExampleEvent2).subscribe((res) => {
-    console.log('2', res);
-});
-sporkHandler.dispatch(new ExampleEvent2());
-
-sporkHandler.on(ExampleEvent3).subscribe((res) => {
-    console.log('3', res);
+    console.log(res.data); // { test: 1 }
 });
 
-const ex3 = new ExampleEvent3();
-ex3.id = 1;
-const arr = [
-    { id: 0 } as ExampleEvent3, // doe not work must call new
-    ex3,
-    new ExampleEvent3(),
-    new ExampleEvent3(),
-    [
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-    ],
-];
-sporkHandler.dispatch(arr);
+sporkHandler.dispatch(new ExampleEvent1());
+sporkHandler.dispatch(new ExampleEvent2({ test: 1 }));
+
+sporkHandler.dispatch(new ExampleEvent3());
+
+sporkHandler.on(ExampleEvent3, { emitLast: true }).subscribe((res) => {
+    console.log(res);
+});
 ```
 
-Simply extend off the Spork class if you want to use any of the options. (Currently only option is emit last)
+Simply add `@Spork()` on a class you want to use with the handler.
 Any class will work with or without data in the class and regardless if the class is using a constructor.

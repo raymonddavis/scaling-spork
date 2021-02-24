@@ -1,56 +1,43 @@
 /* eslint-disable max-classes-per-file, no-console */
 import { Spork, SporkHandler } from '..';
 
-// Only need to extend if using options
-class ExampleEvent1 extends Spork {
-    sporkOptions = {
-        emitLast: true,
-    };
-    message: string;
-    constructor(message: string) {
-        super(); // Only needed if using a constructor
-        this.message = message;
+@Spork()
+class ExampleEvent1 {}
+
+@Spork()
+class ExampleEvent2 {
+    public data1: any = null;
+
+    constructor(data1: any) {
+        this.data1 = data1;
     }
 }
 
-class ExampleEvent2 {
-    data = {
-        test: 1,
-    };
-}
+// class ExampleEvent3 {}
 
-class ExampleEvent3 {
-    id?: number;
-}
+@Spork({ emitLast: true })
+class ExampleEvent4 {}
 
 const sporkHandler = new SporkHandler();
 
-sporkHandler.dispatch(new ExampleEvent1('Before .on'));
-sporkHandler.on(ExampleEvent1, { emitLast: true }).subscribe((res) => {
+sporkHandler.dispatch(new ExampleEvent4());
+
+sporkHandler.on(ExampleEvent1).subscribe((res) => {
     console.log('1', res);
 });
 
 sporkHandler.on(ExampleEvent2).subscribe((res) => {
-    console.log('2', res);
-});
-sporkHandler.dispatch(new ExampleEvent2());
-
-sporkHandler.on(ExampleEvent3).subscribe((res) => {
-    console.log('3', res);
+    console.log('2', res.data1);
 });
 
-const ex3 = new ExampleEvent3();
-ex3.id = 1;
-const arr = [
-    { id: 0 } as ExampleEvent3, // doe not work must call new
-    ex3,
-    new ExampleEvent3(),
-    new ExampleEvent3(),
-    [
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-        new ExampleEvent3(),
-    ],
-];
-sporkHandler.dispatch(arr);
+// sporkHandler.on(ExampleEvent3).subscribe((res) => {
+// console.log('3', res);
+// });
+
+sporkHandler.dispatch(new ExampleEvent1());
+sporkHandler.dispatch(new ExampleEvent2({ test: 1 }));
+// sporkHandler.dispatch(new ExampleEvent3());
+
+sporkHandler.on(ExampleEvent4, { emitLast: true }).subscribe((res) => {
+    console.log(res);
+});
