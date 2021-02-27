@@ -49,7 +49,7 @@ export default class SporkHandler {
         eventType: ISpork<T> = null,
         options: ISporkOptions = DefaultOptions,
     ): Observable<T> {
-        let obs$: Observable<any> = this.$events;
+        let obs$ = this.$events.asObservable();
 
         if (eventType === null) {
             return obs$;
