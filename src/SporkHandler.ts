@@ -1,38 +1,29 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
-import { SPORK_METADATA, SPORK_OPTIONS } from './Spork';
+import { SporkMetaDataValue, SPORK_METADATA } from './Spork';
 import MissingSporkError from './MissingSporkError';
 import { ISpork } from './ISpork';
-import { ISporkOptions } from './ISporkOptions';
+import { DefaultOptions, ISporkOptions } from './ISporkOptions';
 
 export default class SporkHandler {
     private $events = new Subject<any>();
 
     private lastEmits: { [event: string]: any } = {};
 
-    private defaultOptions: ISporkOptions = { emitLast: false };
-
     public dispatch<T extends object>(...events: T[]): void {
         const badClassNames: string[] = [];
 
-        const flattenedEvents = events.flat();
-
-        flattenedEvents.forEach((event) => {
-            const metadata = Reflect.getMetadata(
+        events.flat(Infinity).forEach((event) => {
+            const metadataValue: SporkMetaDataValue = Reflect.getMetadata(
                 SPORK_METADATA,
                 event.constructor,
             );
 
-            if (metadata) {
+            if (metadataValue) {
                 this.$events.next(event);
 
-                const options: ISporkOptions = Reflect.getMetadata(
-                    SPORK_OPTIONS,
-                    event.constructor,
-                );
-
-                if (options && options.emitLast) {
-                    this.lastEmits[event.constructor.name] = event;
+                if (metadataValue.options.emitLast) {
+                    this.lastEmits[metadataValue.symbol.description] = event;
                 }
             } else {
                 const defaultName = 'A class must be used.';
@@ -54,11 +45,17 @@ export default class SporkHandler {
         }
     }
 
-    public on<T extends object>(
-        eventType: ISpork<T>,
-        options: ISporkOptions = this.defaultOptions,
+    public on<T extends object = any>(
+        eventType: ISpork<T> = null,
+        options: ISporkOptions = DefaultOptions,
     ): Observable<T> {
-        const eventTypeMetadata = Reflect.getMetadata(
+        let obs$: Observable<any> = this.$events;
+
+        if (eventType === null) {
+            return obs$;
+        }
+
+        const eventTypeMetadata: SporkMetaDataValue = Reflect.getMetadata(
             SPORK_METADATA,
             eventType,
         );
@@ -78,20 +75,23 @@ export default class SporkHandler {
             throw new MissingSporkError([className]);
         }
 
-        let obs$ = this.$events.pipe(
+        obs$ = obs$.pipe(
             filter((e) => {
-                const metadata = Reflect.getMetadata(
+                const metadata: SporkMetaDataValue = Reflect.getMetadata(
                     SPORK_METADATA,
                     e.constructor,
                 );
-                return metadata === eventTypeMetadata;
+                return metadata.symbol === eventTypeMetadata.symbol;
             }),
         );
 
-        const className = (eventType as any).name;
-
-        if (options.emitLast && this.lastEmits.hasOwnProperty(className)) {
-            obs$ = obs$.pipe(startWith(this.lastEmits[className]));
+        if (
+            options.emitLast &&
+            this.lastEmits.hasOwnProperty(eventTypeMetadata.symbol.description)
+        ) {
+            obs$ = obs$.pipe(
+                startWith(this.lastEmits[eventTypeMetadata.symbol.description]),
+            );
         }
 
         return obs$;

@@ -1,10 +1,10 @@
 /* eslint-disable max-classes-per-file, no-console */
 import { Spork, SporkHandler } from '..';
 
-@Spork()
+@Spork.Register()
 class ExampleEvent1 {}
 
-@Spork()
+@Spork.Register()
 class ExampleEvent2 {
     public data1: any = null;
 
@@ -15,11 +15,17 @@ class ExampleEvent2 {
 
 // class ExampleEvent3 {}
 
-@Spork({ emitLast: true })
+@Spork.Register({ emitLast: true })
 class ExampleEvent4 {}
+
+@Spork.Register({ emitLast: true })
+class ExampleEvent5 {}
 
 const sporkHandler = new SporkHandler();
 
+sporkHandler.on().subscribe((res) => console.log('logger: ', res));
+
+sporkHandler.dispatch(new ExampleEvent5());
 sporkHandler.dispatch(new ExampleEvent4());
 
 sporkHandler.on(ExampleEvent1).subscribe((res) => {
@@ -39,5 +45,5 @@ sporkHandler.dispatch(new ExampleEvent2({ test: 1 }));
 // sporkHandler.dispatch(new ExampleEvent3());
 
 sporkHandler.on(ExampleEvent4, { emitLast: true }).subscribe((res) => {
-    console.log(res);
+    console.log('4', res);
 });
