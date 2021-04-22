@@ -14,10 +14,10 @@ $ npm i scaling-spork
 ```js
 import { Spork, SporkHandler } from 'scaling-spork';
 
-@Spork.Register()
+@Spork()
 class ExampleEvent1 {}
 
-@Spork.Register()
+@Spork()
 class ExampleEvent2 {
     public data1: any = null;
 
@@ -26,10 +26,10 @@ class ExampleEvent2 {
     }
 }
 
-@Spork.Register({ emitLast: true })
+@Spork({ emitLast: true })
 class ExampleEvent4 {}
 
-@Spork.Register({ emitLast: true })
+@Spork({ emitLast: true })
 class ExampleEvent5 {}
 
 const sporkHandler = new SporkHandler();
@@ -55,5 +55,5 @@ sporkHandler.on(ExampleEvent4, { emitLast: true }).subscribe((res) => {
 });
 ```
 
-Simply add `@Spork.Register()` on a class you want to use with the handler.
+Simply add `@Spork()` on a class you want to use with the handler.
 Any class will work with or without data in the class and regardless if the class is using a constructor.
