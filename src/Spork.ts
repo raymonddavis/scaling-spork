@@ -8,16 +8,12 @@ export interface SporkMetaDataValue {
     options: ISporkOptions;
 }
 
-export class Spork {
-    private static index = 0;
-
-    static Register(options?: ISporkOptions) {
-        return <T extends new (...args: {}[]) => object>(target: T) => {
-            const metadataValue: SporkMetaDataValue = {
-                symbol: Symbol(`${SPORK_METADATA}-${Spork.index++}`),
-                options: options || DefaultOptions,
-            };
-            Reflect.defineMetadata(SPORK_METADATA, metadataValue, target);
+export function Spork(options?: ISporkOptions) {
+    return <T extends new (...args: {}[]) => object>(target: T) => {
+        const metadataValue: SporkMetaDataValue = {
+            symbol: Symbol(`${SPORK_METADATA}-${target.constructor.name}`),
+            options: options || DefaultOptions,
         };
-    }
+        Reflect.defineMetadata(SPORK_METADATA, metadataValue, target);
+    };
 }

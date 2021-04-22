@@ -1,10 +1,10 @@
 /* eslint-disable max-classes-per-file, no-console */
 import { Spork, SporkHandler } from '..';
 
-@Spork.Register()
+@Spork()
 class ExampleEvent1 {}
 
-@Spork.Register()
+@Spork()
 class ExampleEvent2 {
     public data1: any = null;
 
@@ -15,10 +15,10 @@ class ExampleEvent2 {
 
 // class ExampleEvent3 {}
 
-@Spork.Register({ emitLast: true })
+@Spork({ emitLast: true })
 class ExampleEvent4 {}
 
-@Spork.Register({ emitLast: true })
+@Spork({ emitLast: true })
 class ExampleEvent5 {}
 
 const sporkHandler = new SporkHandler();

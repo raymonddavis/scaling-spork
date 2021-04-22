@@ -8,7 +8,7 @@ beforeEach(() => {
 });
 
 test('Should receive event (without data)', (done) => {
-    @Spork.Register()
+    @Spork()
     class ExampleEvent {}
 
     const expectedReturn = new ExampleEvent();
@@ -22,7 +22,7 @@ test('Should receive event (without data)', (done) => {
 });
 
 test('Should receive event (with data)', (done) => {
-    @Spork.Register()
+    @Spork()
     class ExampleEvent {
         public data: any = null;
     }
@@ -78,13 +78,13 @@ test('Should throw error .dispatch (not a class)', (done) => {
 });
 
 test('Should receive event (N events to N handlers)', (done) => {
-    @Spork.Register()
+    @Spork()
     class ExampleEvent {}
 
-    @Spork.Register()
+    @Spork()
     class ExampleEvent1 {}
 
-    @Spork.Register()
+    @Spork()
     class ExampleEvent2 {}
 
     const expectedReturn = new ExampleEvent();
@@ -112,7 +112,7 @@ test('Should receive event (N events to N handlers)', (done) => {
 });
 
 test('Should receive events', (done) => {
-    @Spork.Register()
+    @Spork()
     class ExampleEvent {
         public i: number = null;
 
@@ -145,7 +145,7 @@ test('Should receive events', (done) => {
 });
 
 test('Should receive event (last emitted)', (done) => {
-    @Spork.Register({ emitLast: true })
+    @Spork({ emitLast: true })
     class ExampleEvent {}
 
     const expectedReturn = new ExampleEvent();

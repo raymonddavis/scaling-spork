@@ -1,14 +1,19 @@
 import { Observable, Subject } from 'rxjs';
-import { filter, startWith } from 'rxjs/operators';
+import { filter, share, startWith } from 'rxjs/operators';
 import { SporkMetaDataValue, SPORK_METADATA } from './Spork';
 import MissingSporkError from './MissingSporkError';
 import { ISpork } from './ISpork';
 import { DefaultOptions, ISporkOptions } from './ISporkOptions';
 
 export default class SporkHandler {
-    private $events = new Subject<any>();
+    private $: Observable<any>;
+    private events$ = new Subject<any>();
 
     private lastEmits: { [event: string]: any } = {};
+
+    constructor() {
+        this.$ = this.events$.asObservable().pipe(share());
+    }
 
     public dispatch<T extends object>(...events: T[]): void {
         const badClassNames: string[] = [];
@@ -20,7 +25,7 @@ export default class SporkHandler {
             );
 
             if (metadataValue) {
-                this.$events.next(event);
+                this.events$.next(event);
 
                 if (metadataValue.options.emitLast) {
                     this.lastEmits[metadataValue.symbol.description] = event;
@@ -49,7 +54,7 @@ export default class SporkHandler {
         eventType: ISpork<T> = null,
         options: ISporkOptions = DefaultOptions,
     ): Observable<T> {
-        let obs$ = this.$events.asObservable();
+        let obs$ = this.$;
 
         if (eventType === null) {
             return obs$;
