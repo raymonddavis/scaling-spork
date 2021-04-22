@@ -1,6 +1,6 @@
 {
     "name": "scaling-spork",
-    "version": "5.0.1",
+    "version": "5.0.2",
     "description": "Typed Event Handler",
     "main": "index.js",
     "scripts": {
