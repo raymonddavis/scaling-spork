@@ -157,3 +157,29 @@ test('Should receive event (last emitted)', (done) => {
         done();
     });
 });
+
+test('Should receive event (last emitted) no overwritting', (done) => {
+    @Spork({ emitLast: true })
+    class ExampleEvent {}
+
+    @Spork({ emitLast: true })
+    class ExampleEvent1 {
+        public test = 1;
+    }
+
+    const expectedReturn = new ExampleEvent();
+    const expectedReturn1 = new ExampleEvent1();
+
+    handler.dispatch(expectedReturn);
+    handler.dispatch(expectedReturn1);
+
+    handler.on(ExampleEvent, { emitLast: true }).subscribe((res) => {
+        expect(res).toBe(expectedReturn);
+        done();
+    });
+
+    handler.on(ExampleEvent1, { emitLast: true }).subscribe((res) => {
+        expect(res).toBe(expectedReturn1);
+        done();
+    });
+});
