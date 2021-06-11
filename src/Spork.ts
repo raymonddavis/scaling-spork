@@ -8,10 +8,12 @@ export interface SporkMetaDataValue {
     options: ISporkOptions;
 }
 
+let SportCount = 0;
+
 export function Spork(options?: ISporkOptions) {
     return <T extends new (...args: {}[]) => object>(target: T) => {
         const metadataValue: SporkMetaDataValue = {
-            symbol: Symbol(`${SPORK_METADATA}-${target.name}`),
+            symbol: Symbol(`${SPORK_METADATA}-${target.name}-${SportCount++}`),
             options: options || DefaultOptions,
         };
         Reflect.defineMetadata(SPORK_METADATA, metadataValue, target);
