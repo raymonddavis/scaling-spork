@@ -36,11 +36,11 @@
         "stream"
     ],
     "engines": {
-        "node": ">=10"
+        "node": ">=14"
     },
     "dependencies": {
         "reflect-metadata": "^0.1.13",
-        "rxjs": "^6.6.3"
+        "rxjs": "^7.1.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.20",

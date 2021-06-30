@@ -14,7 +14,10 @@
         "strictNullChecks": false,
         "strictPropertyInitialization": false,
         "strict": false,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ]
     },
     "exclude": ["src/examples", "src/tests"]
 }
